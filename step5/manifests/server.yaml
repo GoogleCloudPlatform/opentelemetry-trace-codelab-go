@@ -1,0 +1,66 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: serverservice
+spec:
+  selector:
+    matchLabels:
+      app: serverservice
+  template:
+    metadata:
+      labels:
+        app: serverservice
+    spec:
+      serviceAccountName: default
+      containers:
+        - name: server
+          image: serverservice
+          ports:
+            - containerPort: 5050
+          # Since Kubernetes 1.23, it's recommended to use native grpc probe.
+          # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-grpc-liveness-probe
+          readinessProbe:
+            exec:
+              command: ["/bin/grpc_health_probe", "-addr=:5050"]
+            initialDelaySeconds: 3
+          livenessProbe:
+            exec:
+              command: ["/bin/grpc_health_probe", "-addr=:5050"]
+            initialDelaySeconds: 10
+          env:
+            - name: PORT
+              value: "5050"
+          resources:
+            requests:
+              cpu: 300m
+              memory: 256Mi
+            limits:
+              cpu: 600m
+              memory: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: serverservice
+spec:
+  type: ClusterIP
+  selector:
+    app: serverservice
+  ports:
+    - name: grpc
+      port: 5050
+      targetPort: 5050
