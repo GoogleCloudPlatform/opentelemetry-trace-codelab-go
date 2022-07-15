@@ -85,7 +85,7 @@ func initTracer() (*sdktrace.TracerProvider, error) {
 func initProfiler() {
 	cfg := profiler.Config{
 		Service:              "server",
-		ServiceVersion:       "1.1.0",
+		ServiceVersion:       "1.1.0", // step6. update version
 		NoHeapProfiling:      true,
 		NoAllocProfiling:     true,
 		NoGoroutineProfiling: true,

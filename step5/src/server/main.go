@@ -26,7 +26,7 @@ import (
 
 	"opentelemetry-trace-codelab-go/server/shakesapp"
 
-	"cloud.google.com/go/profiler"
+	"cloud.google.com/go/profiler" // step5. add profiler pacakge.
 	"cloud.google.com/go/storage"
 	cloudtrace "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
