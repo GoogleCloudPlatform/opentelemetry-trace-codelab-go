@@ -1,4 +1,4 @@
-module observability-codelab-go/client
+module opentelemetry-trace-codelab-go/client
 
 go 1.17
 
